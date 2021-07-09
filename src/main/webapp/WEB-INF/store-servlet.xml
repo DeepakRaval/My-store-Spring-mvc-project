@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context.xsd
+  http://www.springframework.org/schema/util
+ http://www.springframework.org/schema/util/spring-util.xsd
+   http://www.springframework.org/schema/tx
+ http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- we use annotations in controller so this tag is used -->
+	<context:component-scan base-package="spring.strore" />
+	
+	<!-- this is for enable writing mode to save object at database  -->
+	<tx:annotation-driven />
+
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		name="viewResolver">
+
+		<property name="prefix" value="/WEB-INF/views/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+
+
+ 	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		name="dataSourceBean">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/spring_jdbc" />
+		<property name="username" value="root" />
+		<property name="password" value="1996" />
+	</bean>
+
+	<bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		name="sesFactoryBean">
+
+		<property name="dataSource" ref="dataSourceBean"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+
+		<property name="annotatedClasses">
+			<list>
+				<value>spring.strore.Model.Product</value>
+			</list>
+		</property>
+	</bean> 
+
+ 	<bean class=" org.springframework.orm.hibernate5.HibernateTemplate"
+		name="hiberTempBean">
+		<property name="sessionFactory" ref="sesFactoryBean"></property>
+	</bean>
+
+
+ 	<bean class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		name="transactionManager">
+		<property name="sessionFactory" ref="sesFactoryBean"></property>
+	</bean>
+</beans>
